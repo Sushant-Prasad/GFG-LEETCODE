@@ -1,0 +1,29 @@
+class Solution {
+    public int minSwaps(int[] nums) {
+        int n=nums.length;
+        int totalOnes=0;
+        // counting total ones
+        for(int i : nums){
+            totalOnes += i; //
+            }
+            if(totalOnes==0 && totalOnes==1)return 0;
+            int currentOnes=0;
+            //counting 1 in 1st window of size 'totalones-size'.
+            for(int i=0;i<totalOnes;i++){
+                 currentOnes += nums[i];
+            }
+            int maxOnes = currentOnes;
+            //sliding the window
+            for(int i=0;i<n;i++){// beacuse it is circular array
+            currentOnes -=nums[i];// removing starting element of window
+            currentOnes+=nums[(i+totalOnes)%n];// the modulo operator handles the circular nature
+             maxOnes = Math.max(currentOnes,maxOnes);
+
+            }
+            return totalOnes -maxOnes;// swap needed 
+    }
+
+
+
+        
+    }
