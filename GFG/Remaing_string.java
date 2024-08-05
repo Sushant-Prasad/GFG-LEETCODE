@@ -7,7 +7,7 @@ public class Remaing_string{
         if(s.charAt(i)==ch){
           count--;// decreasung count when we get particular charater
         }
-        if(count==0){ // checked particular character 'count' times
+        if(count==0){ //checked particular character 'count' times
           break;
         }
     
