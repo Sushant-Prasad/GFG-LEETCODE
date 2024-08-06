@@ -1,0 +1,62 @@
+//{ Driver Code Starts
+// Initial Template for Java
+
+// Initial Template for Java
+
+import java.io.*;
+import java.util.*;
+
+public class validip {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+            String s = sc.next();
+            Solution obj = new Solution();
+
+            if (obj.isValid(s))
+                System.out.println("true");
+            else
+                System.out.println("false");
+        }
+    }
+}
+// } Driver Code Ends
+
+
+// User function Template for Java
+
+class Solution {
+
+    public boolean isValid(String str) {
+        // Write your code here
+        int temp=-1; // value b/w two dots
+        int count=0; // number of dots
+        int prevDot=-1; // index of previous dot
+        int n= str.length();
+        for(int i=0;i<n;i++){
+            if(str.charAt(i)=='.'){
+                count++;
+                if(temp<0 || temp>255)return false;
+                // case of leading zero
+               
+                if(temp!=0 && str.charAt(prevDot+1)=='0')return false;
+                temp=-1;
+                 prevDot=i;
+            }else{
+                // value b/w two dots       
+                if(temp==-1)temp=0;
+                temp= temp*10 + (str.charAt(i)-'0');//character at ith position - ASCII value of '0' character 
+            }
+        }
+            //checking value after last dot
+            if(temp<0 || temp>255 || count!=3)return false;
+            if(temp!=0 && str.charAt(prevDot+1)=='0')return false;
+            return true;
+        
+        
+    }
+}
