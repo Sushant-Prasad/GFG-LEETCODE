@@ -1,6 +1,6 @@
-/* Company Tags                : Amazon, Accolite, D-E-Shaw, FactSet, MakeMyTrip, Microsoft, Samsung
-Leetcode Qn Link            : https://leetcode.com/problems/majority-element
-*/
+// Company Tags : Amazon, Accolite, D-E-Shaw, FactSet, MakeMyTrip, Microsoft, Samsung
+
+
 class Solution {
     public int majorityElement(int[] nums) {
         int n = nums.length;
