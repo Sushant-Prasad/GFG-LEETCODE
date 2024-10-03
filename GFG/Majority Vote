@@ -1,0 +1,69 @@
+//{ Driver Code Starts
+import java.io.*;
+import java.util.*;
+import java.util.Collections;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        sc.nextLine(); // Consume the newline character
+
+        while (t-- > 0) {
+            String s = sc.nextLine();
+            String[] parts = s.split(" ");
+            List<Integer> nums = new ArrayList<>();
+            for (String part : parts) {
+                nums.add(Integer.parseInt(part));
+            }
+            Solution ob = new Solution();
+            List<Integer> ans = ob.findMajority(nums);
+            for (int num : ans) {
+                System.out.print(num + " ");
+            }
+            System.out.println();
+        }
+        sc.close();
+    }
+}
+// } Driver Code Ends
+
+
+class Solution {
+    // Function to find the majority elements in the array
+    public List<Integer> findMajority(List<Integer> nums) {
+        // Your code goes here.
+        int n = nums.size();
+        int maj1=Integer.MIN_VALUE, maj2=Integer.MIN_VALUE, count1=0, count2=0;
+        for(int i=0;i<n;i++){
+            if(maj1==nums.get(i)){
+                count1++;
+            }else if(maj2== nums.get(i)){
+                count2++;
+            }
+            else if(count1==0){
+                count1=1;
+                maj1 = nums.get(i);
+            }else if(count2==0){
+                count2=1;
+                maj2 = nums.get(i);
+            }else{
+                count1--;
+                count2--;
+            }
+        }
+            //veriofication
+            int maj1f=0,maj2f=0; // maj1 ka frequency,maj2 ka frequency
+            for(int j=0;j<n;j++){
+                // frequency calculation
+                if(nums.get(j)==maj1)maj1f++;
+                if(nums.get(j)==maj2)maj2f++;
+            }
+            List<Integer> ans = new ArrayList<>();
+            if(maj1f>n/3)ans.add(maj1);
+            if(maj2f>n/3)ans.add(maj2);
+            if(ans.isEmpty())ans.add(-1);
+        return ans;
+        
+    }
+}
