@@ -1,0 +1,31 @@
+//leetCode - 567
+//Company Tags-Microsoft, Amazon
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        int n1= s1.length();
+        int n2= s2.length();
+        if(n1>n2){
+            return false;
+        }
+        int freqS1[] = new int[26];
+        int freqS2[] = new int[26];
+        for(int i=0;i<n1;i++){
+            freqS1[s1.charAt(i)-'a']++;
+        }
+        int left=0,right=0;// left and right index of slide  window on string s2
+        while(right<n2){
+            freqS2[s2.charAt(right)-'a']++;
+            // Check  current window size == n1
+            if( right-left+1>n1){
+                freqS2[s2.charAt(left)-'a']--;
+                left++;
+        }
+        if(Arrays.equals(freqS1,freqS2)){
+            return true;
+        }
+        right++;
+        }
+        
+        return false;    
+    }
+}
