@@ -1,0 +1,27 @@
+//LeetCode-1813
+class Solution {
+    public boolean areSentencesSimilar(String sentence1, String sentence2) {
+        int n1=sentence1.length();int n2=sentence2.length();
+        if(n1<n2){
+            String temp= sentence1;
+            sentence1=sentence2;
+            sentence2=temp;
+        }
+        Deque<String> s1 = new LinkedList<>( Arrays.asList(sentence1.split(" ")));//splitting string by space
+        Deque<String> s2 = new LinkedList<>(Arrays.asList(sentence2.split(" ")));
+        while(!s1.isEmpty() && !s2.isEmpty() && s1.peekFirst().equals(s2.peekFirst()) ){
+        
+            s1.removeFirst();s2.removeFirst();
+
+        
+        }
+         while(!s1.isEmpty() && !s2.isEmpty() && s1.peekLast().equals(s2.peekLast()) ){
+        
+            s1.removeLast();s2.removeLast();
+
+        
+        }
+        // If s2 is empty, then sentence2 is a sub-sequence of sentence1
+        return s2.isEmpty();
+    }
+}
