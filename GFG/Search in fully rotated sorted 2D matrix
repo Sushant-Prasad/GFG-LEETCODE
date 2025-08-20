@@ -1,0 +1,58 @@
+//https://www.geeksforgeeks.org/problems/search-in-fully-rotated-sorted-2d-matrix/1
+class Solution {
+    public boolean searchMatrix(int[][] mat, int x) {
+        // Number of rows in the matrix
+        int m = mat.length; 
+        
+        // Number of columns in the matrix
+        int n = mat[0].length; 
+        
+        // Start and end pointers for binary search (treating the 2D matrix as a 1D array)
+        int start = 0;
+        int end = m * n - 1;
+        
+        // Perform binary search
+        while (start <= end) {
+            // Calculate middle index safely (to avoid overflow)
+            int mid = start + (end - start) / 2;
+            
+            // Map 1D mid index to 2D row and column
+            int row = mid / n;
+            int col = mid % n;
+            
+            // Get the middle element
+            int midVal = mat[row][col];
+            
+            // Check if the middle element matches the target
+            if (midVal == x) return true;
+            
+            // Get the values at the current start and end indices (for sorted half checking)
+            int startVal = mat[start / n][start % n];
+            int endVal = mat[end / n][end % n];
+            
+            // Check which half is sorted
+            if (startVal <= midVal) {
+                // Left half is sorted
+                if (startVal <= x && x < midVal) {
+                    // Target lies in the left half
+                    end = mid - 1;
+                } else {
+                    // Target lies in the right half
+                    start = mid + 1;
+                }
+            } else {
+                // Right half is sorted
+                if (midVal < x && x <= endVal) {
+                    // Target lies in the right half
+                    start = mid + 1;
+                } else {
+                    // Target lies in the left half
+                    end = mid - 1;
+                }
+            }
+        }
+        
+        // Target not found
+        return false;
+    }
+}
