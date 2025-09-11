@@ -1,0 +1,61 @@
+import java.util.*;
+
+class Solution {
+    /**
+     * Problem: Sort the vowels in a string
+     * -----------------------------------
+     * You are given a string s. Rearrange only the vowels (a, e, i, o, u, A, E, I, O, U)
+     * in the string such that they appear in ascending order based on their ASCII values.
+     * Consonants remain in their original position.
+     *
+     * Approach:
+     * 1. Define a set of vowels for quick lookup.
+     * 2. Traverse the string and collect all vowels into a list.
+     * 3. Sort the list of vowels (using Collections.sort).
+     * 4. Rebuild the string:
+     *    - If the current character is a vowel, replace it with the next sorted vowel.
+     *    - If it's a consonant, keep it unchanged.
+     * 5. Return the rebuilt string.
+     *
+     * Example:
+     * Input:  s = "lEetcOde"
+     * Vowels extracted: [E, e, O, e]
+     * After sorting:    [E, O, e, e]
+     * Reconstruct:      "lEOtcede"
+     *
+     * Time Complexity:
+     * - O(n log n), where n = number of characters in s (sorting the vowels dominates).
+     *
+     * Space Complexity:
+     * - O(n), for storing vowels and the result string.
+     */
+    public String sortVowels(String s) {
+        // Step 1: Define vowels set for quick lookup
+        Set<Character> vowelSet = Set.of('a','e','i','o','u','A','E','I','O','U');
+
+        // Step 2: Collect all vowels in the string
+        List<Character> vowels = new ArrayList<>();
+        for (char c : s.toCharArray()) {
+            if (vowelSet.contains(c)) {
+                vowels.add(c);
+            }
+        }
+
+        // Step 3: Sort vowels by ASCII value
+        Collections.sort(vowels);
+
+        // Step 4: Rebuild the string with sorted vowels
+        StringBuilder result = new StringBuilder();
+        int idx = 0; // pointer to track vowels list
+        for (char c : s.toCharArray()) {
+            if (vowelSet.contains(c)) {
+                result.append(vowels.get(idx++)); // replace with sorted vowel
+            } else {
+                result.append(c); // keep consonant as is
+            }
+        }
+
+        // Step 5: Return the final result
+        return result.toString();
+    }
+}
