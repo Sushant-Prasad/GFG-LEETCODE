@@ -1,0 +1,113 @@
+class Solution {
+    // Stores exact words (original case) for exact-match checks
+    private Set<String> exactWord = new HashSet<>();
+
+    // Maps lowercase word -> original word (first occurrence) for case-insensitive match
+    private HashMap<String, String> caseMap = new HashMap<>();
+
+    // Maps masked-lowercase-word -> original word (first occurrence) for vowel-error match
+    private HashMap<String, String> vowelMap = new HashMap<>();
+
+    /**
+     * Title: Vowel Spellchecker
+     *
+     * Description:
+     * ------------
+     * Given a list of words (wordlist) and a list of queries, for each query return the matching word
+     * from the wordlist using the following priority rules:
+     *
+     * 1. **Exact Match** → If query matches a word in wordlist exactly (case-sensitive).
+     * 2. **Case-Insensitive Match** → If query matches a word in lowercase form (first occurrence kept).
+     * 3. **Vowel-Error Match** → If query matches after replacing all vowels ('a','e','i','o','u') 
+     *    in both query and wordlist with '*'.
+     * 4. If no match, return an empty string "".
+     *
+     * Approach:
+     * ---------
+     * - Preprocess the wordlist into three structures:
+     *    1. `exactWord` (HashSet) → O(1) lookup for exact matches.
+     *    2. `caseMap` (HashMap) → lowercase word → original word (first occurrence).
+     *    3. `vowelMap` (HashMap) → vowel-masked lowercase word → original word (first occurrence).
+     *
+     * - For each query:
+     *    1. Check in `exactWord`.
+     *    2. Check in `caseMap`.
+     *    3. Check in `vowelMap`.
+     *    4. Otherwise return "".
+     *
+     * Helper functions:
+     * - `isVowel(char c)`: returns true if the character is a vowel.
+     * - `maskWord(String s)`: returns a vowel-masked string (all vowels replaced with '*').
+     *
+     * Example:
+     * --------
+     * wordlist = ["KiTe","kite","hare","Hare"]
+     * queries = ["kite","Kite","KiTe","Hare","HARE","Hear","hear","keti","keet","keto"]
+     *
+     * Output = ["kite","KiTe","KiTe","Hare","hare","","","KiTe","","KiTe"]
+     *
+     * Time Complexity: O(n * L + m * L)
+     *   - n = number of words in wordlist, m = number of queries, L = average word length
+     *   - O(n*L) to preprocess, O(m*L) to answer queries
+     *
+     * Space Complexity: O(n * L)
+     *   - HashSet + HashMaps store up to n words (with transformations).
+     */
+
+    // helper: check if a character is a vowel (expects lowercase input)
+    private boolean isVowel(char c) {
+        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+    }
+
+    // Convert a word to lowercase and mask all vowels with '*'
+    private String maskWord(String s) {
+        s = s.toLowerCase(); // normalize
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (isVowel(c)) {
+                sb.append('*');
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    // Process one query and return its best match according to rules
+    private String checkForMatch(String query) {
+        // 1) Exact match (case-sensitive)
+        if (exactWord.contains(query)) return query;
+
+        // 2) Case-insensitive match
+        String lowerQuery = query.toLowerCase();
+        if (caseMap.containsKey(lowerQuery)) return caseMap.get(lowerQuery);
+
+        // 3) Vowel-error match
+        String maskQuery = maskWord(lowerQuery);
+        if (vowelMap.containsKey(maskQuery)) return vowelMap.get(maskQuery);
+
+        // 4) No match
+        return "";
+    }
+
+    // Main function: process all queries against wordlist
+    public String[] spellchecker(String[] wordlist, String[] queries) {
+        // Preprocess wordlist
+        for (String word : wordlist) {
+            exactWord.add(word); // keep exact form for exact matches
+
+            String lowerWord = word.toLowerCase();
+            caseMap.putIfAbsent(lowerWord, word); // only keep first occurrence
+
+            String maskWord = maskWord(lowerWord);
+            vowelMap.putIfAbsent(maskWord, word); // only keep first occurrence
+        }
+
+        // Answer queries
+        String[] res = new String[queries.length];
+        for (int i = 0; i < queries.length; i++) {
+            res[i] = checkForMatch(queries[i]);
+        }
+        return res;
+    }
+}
