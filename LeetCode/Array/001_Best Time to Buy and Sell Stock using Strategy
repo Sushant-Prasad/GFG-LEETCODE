@@ -1,0 +1,125 @@
+class Solution {
+
+    // =========================================================================
+    //  TITLE:
+    //  Maximum Profit with Strategy Modification (Sliding Window)
+    // =========================================================================
+    //
+    //  PROBLEM STATEMENT:
+    //  ------------------
+    //  You are given:
+    //   • prices[]   → price of stock on each day
+    //   • strategy[] → trading strategy per day (-1, 0, or 1)
+    //   • k          → length of a continuous window
+    //
+    //  Original profit per day = strategy[i] * prices[i]
+    //
+    //  You are allowed to modify the strategy for ONE window of length k:
+    //   • In the FIRST k/2 days → force strategy = 0
+    //   • In the LAST  k/2 days → force strategy = 1
+    //
+    //  Goal:
+    //   → Maximize total profit after applying this modification optimally.
+    //
+    // =========================================================================
+    //  INTUITION:
+    //  ----------
+    //  • Compute original total profit first.
+    //  • For every window of size k:
+    //      - Remove original profit of that window
+    //      - Add profit according to the modified strategy
+    //  • Choose the window that gives the maximum additional gain.
+    //
+    // =========================================================================
+    //  APPROACH (SLIDING WINDOW):
+    //  --------------------------
+    //  1. Precompute original profit for each day.
+    //  2. Use sliding window of size k.
+    //  3. Track:
+    //      • originalWindowProfit → sum of original profit in window
+    //      • modifiedWindowProfit → profit after strategy change
+    //  4. Maximize:
+    //      gain = modifiedWindowProfit - originalWindowProfit
+    //
+    // =========================================================================
+    //  SPECIAL NOTES FOR LOGIC ⭐:
+    //  --------------------------
+    //  • First k/2 days of window → strategy becomes 0 → profit = 0
+    //  • Last  k/2 days of window → strategy becomes 1 → profit = prices[i]
+    //  • Only the SECOND HALF contributes to modifiedWindowProfit
+    //
+    // =========================================================================
+    //  TIME COMPLEXITY:
+    //      O(n)
+    //
+    //  SPACE COMPLEXITY:
+    //      O(n)
+    //
+    // =========================================================================
+    public long maxProfit(int[] prices, int[] strategy, int k) {
+
+        int n = prices.length;
+
+        long actualProfit = 0;          // Total profit with original strategy
+        long[] profit = new long[n];    // Original profit per day
+
+        // -------------------------------------------------
+        // Step 1: Compute original profit
+        // -------------------------------------------------
+        for (int idx = 0; idx < n; idx++) {
+            profit[idx] = (long) strategy[idx] * prices[idx];
+            actualProfit += profit[idx];
+        }
+
+        // Sliding window variables
+        long originalWindowProfit = 0;   // Original profit inside window
+        long modifiedWindowProfit = 0;   // Profit after modification
+        long maxGain = 0;                // Best extra profit possible
+
+        int i = 0, j = 0;
+
+        // -------------------------------------------------
+        // Step 2: Sliding Window of size k
+        // -------------------------------------------------
+        while (j < n) {
+
+            // Add current day's original profit to window
+            originalWindowProfit += profit[j];
+
+            // If we are in the SECOND HALF of window
+            // (j - i + 1 > k/2), strategy becomes 1
+            if (j - i + 1 > k / 2) {
+                modifiedWindowProfit += prices[j];
+            }
+
+            // If window size exceeds k → shrink from left
+            if (j - i + 1 > k) {
+
+                // Remove original profit leaving the window
+                originalWindowProfit -= profit[i];
+
+                // Remove corresponding modified profit
+                // (element from second half leaving window)
+                modifiedWindowProfit -= prices[i + k / 2];
+
+                i++;
+            }
+
+            // When window size is exactly k → evaluate gain
+            if (j - i + 1 == k) {
+                maxGain = Math.max(
+                    maxGain,
+                    modifiedWindowProfit - originalWindowProfit
+                );
+            }
+
+            j++;
+        }
+
+        // -------------------------------------------------
+        // Step 3: Return final answer
+        // -------------------------------------------------
+        // Best total profit = original profit + best gain
+        return actualProfit + maxGain;
+    }
+}
