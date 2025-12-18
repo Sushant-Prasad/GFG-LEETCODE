@@ -1,0 +1,133 @@
+import java.util.Arrays;
+
+class Solution {
+
+    // =========================================================================
+    //  TITLE:
+    //  Sort Array by Odd and Even with Custom Order
+    // =========================================================================
+    //
+    //  PROBLEM STATEMENT:
+    //  ------------------
+    //  Given an integer array `arr`:
+    //   • Place all ODD numbers first in DESCENDING order
+    //   • Place all EVEN numbers after that in ASCENDING order
+    //
+    //  The sorting must be done in-place.
+    //
+    // =========================================================================
+    //  INTUITION:
+    //  ----------
+    //  • First, separate odd and even numbers using two pointers.
+    //  • Count how many odd and even numbers exist.
+    //  • Sort the odd part and even part separately.
+    //  • Reverse the odd part to make it descending.
+    //
+    // =========================================================================
+    //  APPROACH:
+    //  ----------
+    //  1. Use two pointers `i` (start) and `j` (end).
+    //  2. Move all odd numbers to the front and even numbers to the back.
+    //  3. Keep count of odd and even elements.
+    //  4. Sort odd part (ascending).
+    //  5. Sort even part (ascending).
+    //  6. Reverse odd part to make it descending.
+    //
+    // =========================================================================
+    //  SPECIAL NOTES FOR LOGIC ⭐:
+    //  --------------------------
+    //  • `% 2 == 0` → even number
+    //  • Odds are kept in the front section [0 ... odd-1]
+    //  • Evens are kept in the section [odd ... odd+even-1]
+    //  • Java's Arrays.sort() sorts in ascending order by default
+    //
+    // =========================================================================
+    //  EXAMPLE:
+    //  --------
+    //  Input:
+    //      arr = [1, 2, 3, 5, 4, 6]
+    //
+    //  Step 1 (partition):
+    //      Odds  = [1, 3, 5]
+    //      Evens = [2, 4, 6]
+    //
+    //  Step 2 (sort):
+    //      Odds  → [1, 3, 5]
+    //      Evens → [2, 4, 6]
+    //
+    //  Step 3 (reverse odds):
+    //      Odds  → [5, 3, 1]
+    //
+    //  Final:
+    //      [5, 3, 1, 2, 4, 6]
+    //
+    // =========================================================================
+    //  DRY RUN:
+    //  --------
+    //  i=0, j=n-1
+    //  If arr[i] is even → swap with arr[j], decrement j
+    //  Else → increment i
+    //
+    //  After loop:
+    //      First `odd` elements → odd numbers
+    //      Next `even` elements → even numbers
+    //
+    // =========================================================================
+    //  KEY POINTS:
+    //  ------------
+    //  ✔ In-place algorithm
+    //  ✔ Uses two-pointer partitioning
+    //  ✔ Separate sorting for odd and even
+    //  ✔ Custom order achieved efficiently
+    //
+    // =========================================================================
+    //  TIME COMPLEXITY:
+    //      O(n log n)
+    //      - Partition: O(n)
+    //      - Sorting: O(n log n)
+    //
+    //  SPACE COMPLEXITY:
+    //      O(1)
+    //      - In-place (excluding sort internals)
+    //
+    // =========================================================================
+    public void sortIt(int[] arr) {
+
+        int i = 0, j = arr.length - 1;
+        int odd = 0, even = 0;
+
+        // Step 1: Partition odd and even numbers
+        while (i <= j) {
+
+            // If current element is even, swap it to the end
+            if (arr[i] % 2 == 0) {
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+                even++;
+                j--;
+            }
+            // If current element is odd, keep it in front
+            else {
+                odd++;
+                i++;
+            }
+        }
+
+        // Step 2: Sort odd part (ascending)
+        Arrays.sort(arr, 0, odd);
+
+        // Step 3: Sort even part (ascending)
+        Arrays.sort(arr, odd, odd + even);
+
+        // Step 4: Reverse odd part to make it descending
+        int p = 0, q = odd - 1;
+        while (p < q) {
+            int temp = arr[p];
+            arr[p] = arr[q];
+            arr[q] = temp;
+            p++;
+            q--;
+        }
+    }
+}
