@@ -1,0 +1,73 @@
+import java.util.Arrays;
+
+class Solution {
+
+    // =========================================================================
+    //  TITLE:
+    //  Bus Conductor – Minimum Moves to Seat All Passengers
+    // =========================================================================
+    //
+    //  PROBLEM STATEMENT:
+    //  ------------------
+    //  You are given two arrays:
+    //      chairs[]      → positions of chairs
+    //      passengers[]  → positions of passengers
+    //
+    //  Each passenger can move left or right by 1 unit per move.
+    //  Each passenger must be assigned to exactly one unique chair.
+    //
+    //  Objective:
+    //  ---------
+    //  Return the minimum total number of moves required to seat all passengers.
+    //
+    // =========================================================================
+    //  INTUITION:
+    //  ----------
+    //  • To minimize total movement, each passenger should be assigned
+    //    to the closest possible chair.
+    //  • Sorting both arrays allows optimal one-to-one pairing:
+    //      smallest passenger → smallest chair
+    //      largest passenger  → largest chair
+    //
+    // =========================================================================
+    //  APPROACH (GREEDY + SORTING):
+    //  ----------------------------
+    //  1. Sort both `chairs` and `passengers`.
+    //  2. Pair passengers and chairs at the same index.
+    //  3. Add absolute distance |chair[i] - passenger[i]| to total moves.
+    //
+    // =========================================================================
+    //  WHY THIS WORKS (OPTIMALITY):
+    //  -----------------------------
+    //  • Sorting prevents crossing assignments.
+    //  • Any other pairing would increase the total distance.
+    //  • This greedy strategy guarantees the minimum sum of movements.
+    //
+    // =========================================================================
+    //  TIME COMPLEXITY:
+    //      O(n log n)  → due to sorting
+    //
+    //  SPACE COMPLEXITY:
+    //      O(1)        → ignoring sorting space
+    //
+    // =========================================================================
+    public int findMoves(int[] chairs, int[] passengers) {
+
+        // Step 1: Sort chair positions
+        Arrays.sort(chairs);
+
+        // Step 2: Sort passenger positions
+        Arrays.sort(passengers);
+
+        int result = 0;
+
+        // Step 3: Calculate total minimum movement
+        for (int i = 0; i < chairs.length; i++) {
+            // Absolute difference gives moves needed for each passenger
+            result += Math.abs(chairs[i] - passengers[i]);
+        }
+
+        // Step 4: Return total moves
+        return result;
+    }
+}
