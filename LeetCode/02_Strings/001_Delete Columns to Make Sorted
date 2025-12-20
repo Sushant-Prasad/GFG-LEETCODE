@@ -1,0 +1,123 @@
+class Solution {
+
+    // =========================================================================
+    //  TITLE:
+    //  Delete Columns to Make Sorted
+    // =========================================================================
+    //
+    //  PROBLEM STATEMENT:
+    //  ------------------
+    //  You are given an array of strings `strs` where:
+    //   • All strings have the same length
+    //   • Each string consists of lowercase English letters
+    //
+    //  A column is considered **sorted** if characters from top to bottom
+    //  are in non-decreasing order.
+    //
+    //  Your task is to return the **minimum number of columns that must be
+    //  deleted** so that the remaining columns are sorted.
+    //
+    // =========================================================================
+    //  PROBLEM RESOURCE:
+    //  -----------------
+    //  https://leetcode.com/problems/delete-columns-to-make-sorted/
+    //
+    // =========================================================================
+    //  INTUITION:
+    //  ----------
+    //  • Each column is independent of the others.
+    //  • For a column to be valid, characters must be sorted from
+    //    top to bottom.
+    //  • If any column violates this rule, it must be deleted.
+    //
+    // =========================================================================
+    //  APPROACH:
+    //  ----------
+    //  1. Iterate column by column.
+    //  2. For each column, compare characters row by row.
+    //  3. If any adjacent characters are out of order,
+    //     mark this column for deletion.
+    //  4. Stop checking that column immediately (optimization).
+    //
+    // =========================================================================
+    //  EXAMPLE:
+    //  --------
+    //  Input:
+    //      strs = ["cba","daf","ghi"]
+    //
+    //  Columns:
+    //      Column 0 → c, d, g  (sorted ✔)
+    //      Column 1 → b, a, h  (not sorted ✘)
+    //      Column 2 → a, f, i  (sorted ✔)
+    //
+    //  Output:
+    //      1
+    //
+    // =========================================================================
+    //  DRY RUN:
+    //  --------
+    //  strs = ["zyx","wvu","tsr"]
+    //
+    //  Column 0:
+    //      z > w → delete column
+    //
+    //  Column 1:
+    //      y > v → delete column
+    //
+    //  Column 2:
+    //      x > u → delete column
+    //
+    //  Total deletions = 3
+    //
+    // =========================================================================
+    //  SPECIAL NOTES FOR LOGIC ⭐:
+    //  --------------------------
+    //  • The `break` statement exits the inner loop once a column
+    //    is found to be invalid.
+    //  • This avoids unnecessary comparisons and improves efficiency.
+    //  • Each column is checked independently.
+    //
+    // =========================================================================
+    //  KEY POINTS:
+    //  ------------
+    //  ✔ Independent column checks
+    //  ✔ Early termination using `break`
+    //  ✔ No extra data structures needed
+    //  ✔ Clean and optimal approach
+    //
+    // =========================================================================
+    //  TIME COMPLEXITY:
+    //      O(n × m)
+    //      where:
+    //        n = number of strings (rows)
+    //        m = length of each string (columns)
+    //
+    // =========================================================================
+    //  SPACE COMPLEXITY:
+    //      O(1)
+    //      (only constant extra variables used)
+    //
+    // =========================================================================
+    public int minDeletionSize(String[] strs) {
+
+        int n = strs.length;        // number of rows
+        int m = strs[0].length();   // number of columns
+        int ans = 0;                // count of columns to delete
+
+        // Traverse each column
+        for (int i = 0; i < m; i++) {
+
+            // Check if this column is sorted top-to-bottom
+            for (int j = 0; j < n - 1; j++) {
+
+                // If current character > next character, column is invalid
+                if (strs[j].charAt(i) > strs[j + 1].charAt(i)) {
+                    ans++;   // mark column for deletion
+                    break;   // stop checking this column
+                }
+            }
+        }
+
+        return ans;
+    }
+}
